@@ -13,14 +13,15 @@ namespace VLCSnapshots
     public partial class UserControl1 : UserControl
     {
 
-        
+        TableLayoutPanel table;
 
         public UserControl1()
         {
             InitializeComponent();
-            
+            setTable();
         }
 
+        #region Library 
 
         public void remove_row(TableLayoutPanel panel, int row_index_to_remove)
         {
@@ -44,17 +45,63 @@ namespace VLCSnapshots
             panel.RowStyles.RemoveAt(panel.RowCount-- - 1);
         }
 
+        #endregion
+
+
+        #region Init Board
+
+        private void setTable()
+        {
+            table = new TableLayoutPanel
+            {
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                CellBorderStyle = TableLayoutPanelCellBorderStyle.Single,
+                MaximumSize = new Size(0, 1000),
+                
+            };
+            table.SuspendLayout();
+            table.Location = new Point(0, 0);
+            table.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            table.RowCount++;
+            string[] columnTitles = { "IP Adress", "Stream number", "Brand", "Stream address", "Actions" };
+            for( int i=0; i < columnTitles.Count(); i++)
+            {
+                table.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+                table.ColumnCount++;
+                createCellLabel(i, 0, columnTitles[i]);
+            }
+            addNewRow(1, "192.168.100.160", 1, "SONY", "rtsp://admin:admin@192.168.1.16/media/video1");
+            table.ResumeLayout();
+            tabPage1.Controls.Add(table);
+
+        }
+
+        public void createCellLabel(int column, int row, string message )
+        {
+            Label label = new Label
+            {
+                AutoSize = true,
+                Text = message
+            };
+            table.Controls.Add(label, column, row);
+        }
+
+        #endregion
+
+        #region Buttons Click
+
         private void buttonAdd_Click(object sender, EventArgs e)
         {
             Button button = (Button)sender;
-            int column = tableLayoutPanel1.GetColumn(button.Parent);
-            int row = tableLayoutPanel1.GetRow(button.Parent);
+            int column = table.GetColumn(button.Parent);
+            int row = table.GetRow(button.Parent);
             Console.WriteLine("column number : " + column + "  row number : " + row );
 
-            string ipAddress = textBoxIPAddress.Text;
-            int streamNumber = (int) numericUpDownStreamNumber.Value;
-            string brand = textBoxBrand.Text;
-            string streamAddress = textBoxStreamAddress.Text;
+            string ipAddress = ((TextBox)table.GetControlFromPosition(0, row)).Text;
+            int streamNumber = (int) ((NumericUpDown)table.GetControlFromPosition(1, row)).Value;
+            string brand = ((TextBox)table.GetControlFromPosition(2, row)).Text;
+            string streamAddress = ((TextBox)table.GetControlFromPosition(3, row)).Text;
 
             Stream stream = new Stream(brand, ipAddress, streamNumber, streamAddress);
             Form1.streams.Add(stream);
@@ -66,119 +113,132 @@ namespace VLCSnapshots
         private void buttonUpdate_Click(object sender, EventArgs e)
         {
             Button button = (Button)sender;
-            int row = tableLayoutPanel1.GetRow(button.Parent);
+            int row = table.GetRow(button.Parent);
             enableRow(row);
         }
 
         private void buttonDelete_Click(object sender, EventArgs e)
         {
+            table.SuspendLayout();
+
             Button button = (Button)sender;
-            int row = tableLayoutPanel1.GetRow(button.Parent);
-
-            for (int column = 0; column < tableLayoutPanel1.ColumnCount; column++)
-                Controls.Remove(tableLayoutPanel1.GetControlFromPosition(column, row));
-
-            remove_row(tableLayoutPanel1, row);
+            int row = table.GetRow(button.Parent);
+            for (int column = 0; column < table.ColumnCount; column++)
+                Controls.Remove(table.GetControlFromPosition(column, row));
+            remove_row(table, row);
+                
+            table.ResumeLayout();
         }
 
+        #endregion
 
-        private void initTable()
-        {
-            TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
-            tableLayoutPanel.AutoSize = true;
-            tableLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
-            tableLayoutPanel.MaximumSize = new Size(0, 1000);
-
-        }
+        #region Button Actions
 
         private void changeToAddedRow(int column , int row)
         {
-            Panel panel = (Panel)tableLayoutPanel1.GetControlFromPosition(column, row);
-            panel.Controls.Clear();
-
-            Button buttonUpdate = new Button();
-            buttonUpdate.Size = new Size(70, 23);
-            buttonUpdate.Margin = new Padding(0, 0, 0, 0);
-            buttonUpdate.Text = "Update";
-            buttonUpdate.UseVisualStyleBackColor = true;
+            Button buttonUpdate = new Button
+            {
+                Size = new Size(70, 23),
+                Margin = new Padding(0),
+                Text = "Update",
+                UseVisualStyleBackColor = true
+            };
             buttonUpdate.Click += new EventHandler(buttonUpdate_Click);
-           
-            Button buttonDelete = new Button();
-            buttonDelete.Size = new Size(70, 23);
-            buttonDelete.Margin = new Padding(0, 0, 0, 0);
-            buttonDelete.Text = "Delete";
-            buttonDelete.UseVisualStyleBackColor = true;
+
+            Button buttonDelete = new Button
+            {
+                Size = new Size(70, 23),
+                Margin = new Padding(0),
+                Text = "Delete",
+                UseVisualStyleBackColor = true
+            };
             buttonDelete.Click += new EventHandler(buttonDelete_Click);
 
-            panel.Controls.AddRange(new Control[] { buttonUpdate, buttonDelete });
 
+            FlowLayoutPanel panel = (FlowLayoutPanel)table.GetControlFromPosition(column, row);
+            panel.Controls.Clear();
+            panel.Controls.AddRange(new Control[] { buttonUpdate, buttonDelete });
+           
             disableRow(row);
-            return;
+
         }
 
         private void disableRow(int row)
         {
-            for (int column = 0; column < tableLayoutPanel1.ColumnCount - 1; column++)
-                tableLayoutPanel1.GetControlFromPosition(column, row).Enabled = false;
+            for (int column = 0; column < table.ColumnCount - 1; column++)
+                table.GetControlFromPosition(column, row).Enabled = false;
         }
         private void enableRow(int row)
         {
-            for (int column = 0; column < tableLayoutPanel1.ColumnCount - 1; column++)
-                tableLayoutPanel1.GetControlFromPosition(column, row).Enabled = true;
+            for (int column = 0; column < table.ColumnCount - 1; column++)
+                table.GetControlFromPosition(column, row).Enabled = true;
         }
 
 
-        private void addNewRow(int row)
+        private void addNewRow(int row, string IPadress="", int streamNumber=1, string brand="", string streamAddress="")
         {
-            if (row >= tableLayoutPanel1.RowCount)
+            if (row >= table.RowCount)
             {
-                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-                tableLayoutPanel1.RowCount++;
+                table.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                table.RowCount++;
             }
 
 
-            TextBox textBoxIPAddress1 = new TextBox();
-            textBoxIPAddress1.Size = new Size(100, 23);
-            textBoxIPAddress1.Margin = new Padding(4, 4, 4, 4);
+            TextBox textBoxIPAddress = new TextBox
+            {
+                Size = new Size(100, 23),
+                Margin = new Padding(4),
+                Text = IPadress
+            };
 
-            NumericUpDown numericUpDownStreamNumber1 = new NumericUpDown();
-            numericUpDownStreamNumber1.Size = new Size(50, 23);
-            numericUpDownStreamNumber1.Margin = new Padding(4, 4, 4, 4);
-            numericUpDownStreamNumber1.Minimum = 1;
-            numericUpDownStreamNumber1.Maximum = 3;
-            numericUpDownStreamNumber1.TextAlign = HorizontalAlignment.Center;
+            NumericUpDown numericUpDownStreamNumber = new NumericUpDown
+            {
+                Size = new Size(50, 23),
+                Margin = new Padding(4),
+                Minimum = 1,
+                Maximum = 3,
+                TextAlign = HorizontalAlignment.Center,
+                Value = streamNumber
+            };
 
-            TextBox textBoxBrand1 = new TextBox();
-            textBoxBrand1.Size = new Size(200, 23);
-            textBoxBrand1.Margin = new Padding(4, 4, 4, 4);
+            TextBox textBoxBrand = new TextBox
+            {
+                Size = new Size(200, 23),
+                Margin = new Padding(4),
+                Text = brand
+            };
 
-            TextBox textBoxStreamAddress1 = new TextBox();
-            textBoxStreamAddress1.Size = new Size(400, 23);
-            textBoxStreamAddress1.Margin = new Padding(4, 4, 4, 4);
+            TextBox textBoxStreamAddress = new TextBox
+            {
+                Size = new Size(400, 23),
+                Margin = new Padding(4),
+                Text = streamAddress
+            };
 
-            Panel panel11 = new Panel();
-            panel11.AutoSize = true;
-            Button buttonAdd1 = new Button();
-            buttonAdd1.Size = new Size(50, 23);
-            buttonAdd1.Margin = new Padding(0, 0, 0, 0);
-            buttonAdd1.Text = "Add";
-            buttonAdd1.UseVisualStyleBackColor = true;
+            FlowLayoutPanel panel = new FlowLayoutPanel
+            {
+                AutoSize = true
+            };
+
+            Button buttonAdd1 = new Button
+            {
+                Size = new Size(50, 23),
+                Margin = new Padding(0),
+                Text = "Add",
+                UseVisualStyleBackColor = true
+            };
             buttonAdd1.Click += new EventHandler(buttonAdd_Click);
-            panel11.Controls.Add(buttonAdd1);
+            panel.Controls.Add(buttonAdd1);
 
-            tableLayoutPanel1.SuspendLayout();
-            tableLayoutPanel1.Controls.Add(textBoxIPAddress1, 0, row);
-            tableLayoutPanel1.Controls.Add(numericUpDownStreamNumber1, 1, row);
-            tableLayoutPanel1.Controls.Add(textBoxBrand1, 2, row);
-            tableLayoutPanel1.Controls.Add(textBoxStreamAddress1, 3, row);
-            tableLayoutPanel1.Controls.Add(panel11, 4, row);
-            tableLayoutPanel1.ResumeLayout();
-
-            return;
-
+            table.SuspendLayout();
+            table.Controls.Add(textBoxIPAddress, 0, row);
+            table.Controls.Add(numericUpDownStreamNumber, 1, row);
+            table.Controls.Add(textBoxBrand, 2, row);
+            table.Controls.Add(textBoxStreamAddress, 3, row);
+            table.Controls.Add(panel, 4, row);
+            table.ResumeLayout();
         }
 
-
+        #endregion
     }
 }
