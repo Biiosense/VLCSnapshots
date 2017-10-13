@@ -1,4 +1,4 @@
-﻿namespace VLCSnapshots
+﻿namespace User_interface
 {
     partial class VLCUserControl
     {

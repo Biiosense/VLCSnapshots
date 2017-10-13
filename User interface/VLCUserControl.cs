@@ -9,17 +9,20 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Drawing.Imaging;
+using Data;
 
-namespace VLCSnapshots
+namespace User_interface
 {
     public partial class VLCUserControl : UserControl
     {
-        public static string snapshotsPath;
+        Form1 form;
+        public string snapshotsPath;
         string options;
-        Stream stream;
+        Data.Stream stream;
 
-        public VLCUserControl()
+        public VLCUserControl(Form1 form)
         {
+            this.form = form;
             InitializeComponent();
             snapshotsPath = @"D:\Users\Maxime\Desktop\snapshots\";
             options = ":no-overlay";
@@ -27,9 +30,9 @@ namespace VLCSnapshots
 
         private void playButton_Click(object sender, EventArgs e)
         {
-            if( Form1.streams.Count > 0)
+            if( form.playlist.Count > 0)
             {
-                stream = Form1.streams.ElementAt(0);
+                stream = form.playlist.ElementAt(0);
                 Console.WriteLine("rtsp : " + stream);
 
                 vlc.playlist.add(stream.streamAddress, "first rtsp", options);

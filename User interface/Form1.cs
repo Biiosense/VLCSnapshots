@@ -7,8 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Data;
 
-namespace VLCSnapshots
+namespace User_interface
 {
     public partial class Form1 : Form
     {
@@ -18,16 +19,16 @@ namespace VLCSnapshots
 
         VLCUserControl VLCuc;
         UserControl1 uc;
-        public static List<Stream> streams;
+        public Playlist playlist;
 
 
         public Form1()
         {
             InitializeComponent();
-            VLCuc = new VLCUserControl();
-            uc = new UserControl1();
+            uc = new UserControl1(this);
+            VLCuc = new VLCUserControl(this);       
             panel1.Controls.Add(uc);
-            streams = new List<Stream>();
+            playlist = new Playlist();
         }
 
         private void tab1ToolStripMenuItem_Click(object sender, EventArgs e)
