@@ -5,22 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Data;
 
 namespace User_interface
 {
-    public class MyTable : TableLayoutPanel
+    class MyTable : TableLayoutPanel
     {
         #region Add / Remove Row
-
-        public void addRow(int row, Stream stream)
-        {
-            addRow( row, stream.getIPAddress(), stream.getStreamNumber(), stream.getBrand(), stream.getStreamAddress() );
-        }
-
         public void addRow(int row, string IPadress = "", int streamNumber = 1, string brand = "", string streamAddress = "")
         {
-            if (row == RowCount)
+            if (row >= RowCount)
             {
                 RowStyles.Add(new RowStyle(SizeType.AutoSize));
                 RowCount++;
@@ -110,8 +103,7 @@ namespace User_interface
             buttonUpdate.Visible = false;
             buttonValidate.Visible = false;
             buttonDelete.Visible = false;
-
-            panel.Controls.AddRange( new Control[] { buttonAdd, buttonUpdate, buttonValidate, buttonDelete });
+            panel.Controls.AddRange(new Control[] { buttonAdd, buttonUpdate, buttonValidate, buttonDelete });
 
             Controls.Add(textBoxIPAddress, 0, row);
             Controls.Add(numericUpDownStreamNumber, 1, row);

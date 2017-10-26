@@ -1,24 +1,25 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Data
 {
-    [JsonObject(MemberSerialization.Fields)]
-    public class Playlist : Collection<Stream>
+    public class Playlist : List<Stream>
     {
 
-        public string name;
+        private List<Stream> streams;
 
-        public Playlist(string name) 
+        public Playlist()
         {
-            this.name = name;
+            streams = new List<Stream>();
         }
+
+        public Playlist(int capacity) : base(capacity) { }
+
+        public Playlist(IEnumerable<Stream> collection) : base(collection) { }
+
 
     }
 }

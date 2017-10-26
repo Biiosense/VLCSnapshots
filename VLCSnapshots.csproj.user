@@ -11,7 +11,4 @@
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
-  <PropertyGroup>
-    <ReferencePath>C:\Users\X250\Documents\Visual Studio 2015\Projects\VLCSnapshots\libraries\</ReferencePath>
-  </PropertyGroup>
 </Project>

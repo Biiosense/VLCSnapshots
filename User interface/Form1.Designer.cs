@@ -66,7 +66,7 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(112, 24);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 24);
             this.openToolStripMenuItem.Text = "&Open";
             // 
             // tabToolStripMenuItem
@@ -81,14 +81,14 @@
             // tab1ToolStripMenuItem
             // 
             this.tab1ToolStripMenuItem.Name = "tab1ToolStripMenuItem";
-            this.tab1ToolStripMenuItem.Size = new System.Drawing.Size(151, 24);
+            this.tab1ToolStripMenuItem.Size = new System.Drawing.Size(152, 24);
             this.tab1ToolStripMenuItem.Text = "&VLC PLayer";
             this.tab1ToolStripMenuItem.Click += new System.EventHandler(this.tab1ToolStripMenuItem_Click);
             // 
             // tab2ToolStripMenuItem
             // 
             this.tab2ToolStripMenuItem.Name = "tab2ToolStripMenuItem";
-            this.tab2ToolStripMenuItem.Size = new System.Drawing.Size(151, 24);
+            this.tab2ToolStripMenuItem.Size = new System.Drawing.Size(152, 24);
             this.tab2ToolStripMenuItem.Text = "&Playlist view";
             this.tab2ToolStripMenuItem.Click += new System.EventHandler(this.tab2ToolStripMenuItem_Click);
             // 
@@ -115,7 +115,6 @@
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Form1";
             this.Text = "VLC Snapshots";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
