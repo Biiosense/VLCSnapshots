@@ -16,7 +16,7 @@ namespace User_interface
     public partial class VLCUserControl : UserControl
     {
         Form1 form;
-        public string snapshotsPath;
+        public static string snapshotsPath = @"D:\Users\Maxime\Desktop\snapshots\";
         string options;
         Data.Stream stream;
 
@@ -24,18 +24,17 @@ namespace User_interface
         {
             this.form = form;
             InitializeComponent();
-            snapshotsPath = @"D:\Users\Maxime\Desktop\snapshots\";
             options = ":no-overlay";
         }
 
         private void playButton_Click(object sender, EventArgs e)
         {
-            if( form.playlist.Count > 0)
+            if( form.playlists[0].Count > 0)
             {
-                stream = form.playlist.ElementAt(0);
+                stream = form.playlists[0].ElementAt(0);
                 Console.WriteLine("rtsp : " + stream);
 
-                vlc.playlist.add(stream.streamAddress, "first rtsp", options);
+                vlc.playlist.add(stream.getStreamAddress(), "first rtsp", options);
                 vlc.playlist.play();
                 Console.WriteLine("Play!");
             }
