@@ -20,40 +20,64 @@ namespace User_interface
         {
             this.form = form;
             InitializeComponent();
-            setTable();
+            setTables();
         }
 
 
         #region Init Board
 
-        private void setTable()
+        private void setTables()
         {
-            table = new MyTable
+            table = initTable();
+            tabPage1.Controls.Add(table);
+
+            fillTableFromPlaylist(table, 0);
+        }
+
+        public MyTable initTable()
+        {
+            MyTable table = new MyTable
             {
+                AutoScroll = true,
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 CellBorderStyle = TableLayoutPanelCellBorderStyle.Single,
-                MaximumSize = new Size(0, 1000),
-                
             };
-            table.SuspendLayout();
             table.Location = new Point(0, 0);
             table.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             table.RowCount++;
+            createTitleRow(table);
+            
+            return table;
+        }
+
+        public void fillTableFromPlaylist(MyTable table, int tabIndex)
+        {
+            Playlist playlist = form.playlists[tabIndex];
+
+            if (playlist != null)
+            {
+                foreach (Stream stream in playlist)
+                { 
+                    table.addRow(table.RowCount, stream);
+                    table.changeToAddedRow(table.RowCount-1);
+                }
+            }
+            table.addRow(table.RowCount);
+        }
+
+        public void createTitleRow(MyTable table)
+        {
             string[] columnTitles = { "IP Adress", "Stream number", "Brand", "Stream address", "Actions" };
-            for( int i=0; i < columnTitles.Count(); i++)
+            for (int i = 0; i < columnTitles.Count(); i++)
             {
                 table.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
                 table.ColumnCount++;
-                createCellLabel(i, 0, columnTitles[i]);
+                createCellLabel(table, i, 0, columnTitles[i]);
             }
-
-            table.ResumeLayout();
-            tabPage1.Controls.Add(table);
-            table.addRow(1, "192.168.100.160", 1, "SONY", "rtsp://admin:admin@192.168.1.16/media/video1");
         }
 
-        public void createCellLabel(int column, int row, string message )
+        public void createCellLabel(MyTable table, int column, int row, string message )
         {
             Label label = new Label
             {
@@ -70,18 +94,13 @@ namespace User_interface
         public void buttonAdd_Click(object sender, EventArgs e)
         {
             table.SuspendLayout();
-
             Button button = (Button)sender;
             int row = table.GetRow(button.Parent);
 
-            string ipAddress = ((TextBox)table.GetControlFromPosition(0, row)).Text;
-            int streamNumber = (int) ((NumericUpDown)table.GetControlFromPosition(1, row)).Value;
-            string brand = ((TextBox)table.GetControlFromPosition(2, row)).Text;
-            string streamAddress = ((TextBox)table.GetControlFromPosition(3, row)).Text;
-
-            if( ipAddress != "" && brand != "" && streamAddress != "" )
+            Stream stream = getStreamFromRow(row);
+            if (!stream.isEmpty())
             {
-                form.playlist.Add(new Stream(brand, ipAddress, streamNumber, streamAddress));
+                form.playlists[0].Add(stream);
                 table.changeToAddedRow(row);
                 table.addRow(row + 1);
             }
@@ -92,9 +111,9 @@ namespace User_interface
         public void buttonUpdate_Click(object sender, EventArgs e)
         {
             table.SuspendLayout();
-
             Button button = (Button)sender;
             int row = table.GetRow(button.Parent);
+
             table.changeToBeingModifiedRow(row);
 
             table.ResumeLayout();
@@ -103,25 +122,16 @@ namespace User_interface
         public void buttonValidate_Click(object sender, EventArgs e)
         {
             table.SuspendLayout();
-
             Button button = (Button)sender;
             int row = table.GetRow(button.Parent);
-            Stream previousStream = form.playlist[row-1];
 
-            string ipAddress = ((TextBox)table.GetControlFromPosition(0, row)).Text;
-            int streamNumber = (int)((NumericUpDown)table.GetControlFromPosition(1, row)).Value;
-            string brand = ((TextBox)table.GetControlFromPosition(2, row)).Text;
-            string streamAddress = ((TextBox)table.GetControlFromPosition(3, row)).Text;
+            Stream previousStream = form.playlists[0][row - 1];
 
-            if (ipAddress != "" && brand != "" && streamAddress != "")
-            {
-                Stream newStream = new Stream(brand, ipAddress, streamNumber, streamAddress);
-                if (previousStream != newStream)
-                {
-                    form.playlist[row-1] = newStream;
-                    table.changeToAddedRow(row);
-                }
-            }
+            Stream newStream = getStreamFromRow(row);
+            if (!newStream.isEmpty() && previousStream != newStream)
+                form.playlists[0][row - 1] = newStream;
+
+            table.changeToAddedRow(row);
 
             table.ResumeLayout();
         }
@@ -132,9 +142,13 @@ namespace User_interface
 
             Button button = (Button)sender;
             int row = table.GetRow(button.Parent);
-            form.playlist.RemoveAt(row-1);
-            table.remove_row(row);
-                
+
+            if (MessageBox.Show("Do you really want to delete this stream ?", "Stream deletion", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                form.playlists[0].RemoveAt(row - 1);
+                table.remove_row(row);
+            }
+
             table.ResumeLayout();
         }
 
@@ -143,7 +157,18 @@ namespace User_interface
         private void button1_Click_1(object sender, EventArgs e)
         {
             listBox1.Items.Clear();
-            listBox1.Items.AddRange(form.playlist.ToArray());
+            listBox1.Items.AddRange(form.playlists[0].ToArray());
+        }
+
+
+        public Stream getStreamFromRow(int row)
+        {
+            string ipAddress = ((TextBox)table.GetControlFromPosition(0, row)).Text;
+            int streamNumber = (int)((NumericUpDown)table.GetControlFromPosition(1, row)).Value;
+            string brand = ((TextBox)table.GetControlFromPosition(2, row)).Text;
+            string streamAddress = ((TextBox)table.GetControlFromPosition(3, row)).Text;
+
+            return new Stream(ipAddress, streamNumber, brand, streamAddress);
         }
     }
 }

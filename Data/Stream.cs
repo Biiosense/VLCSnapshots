@@ -3,26 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Data
 {
+    [JsonObject(MemberSerialization.Fields)]
     public class Stream
     {
-        public string brand;
-        public string ipAddress;
-        public int streamNumber;
-        public string streamAddress;
+        private string ipAddress;
+        private int streamNumber;
+        private string brand;
+        private string streamAddress;
 
-        public Stream(string brand, string ipAddress, int streamNumber, string streamAddress)
+        public Stream(string ipAddress, int streamNumber, string brand,  string streamAddress)
         {
-            this.brand = brand;
             this.ipAddress = ipAddress;
             this.streamNumber = streamNumber;
+            this.brand = brand;
             this.streamAddress = streamAddress;
         }
 
-        public Stream()
+        public bool isEmpty()
         {
+            return (ipAddress == "" || brand == "" || streamAddress == "");
+        }
+
+
+        public string getStreamName()
+        {
+            return ipAddress + "_F" + streamNumber;
         }
 
         public override string ToString()
@@ -30,17 +39,40 @@ namespace Data
             return getStreamName();
         }
 
-        public string getStreamName()
+        #region Getter
+
+        public string getIPAddress()
         {
-            return ipAddress + "_F" + streamNumber;
+            return ipAddress;
         }
+
+        public int getStreamNumber()
+        {
+            return streamNumber;
+        }
+
+        public string getBrand()
+        {
+            return brand;
+        }
+
+        public string getStreamAddress()
+        {
+            return streamAddress;
+        }
+
+        #endregion
 
         #region Override operator == !=
 
         public override bool Equals(object Obj)
         {
             if (!ReferenceEquals(Obj, DBNull.Value))
-                return streamAddress == ((Stream)Obj).streamAddress;
+            {
+                Stream obj = (Stream)Obj;
+                if (brand == obj.brand && ipAddress == obj.ipAddress && streamNumber == obj.streamNumber && streamAddress == obj.streamAddress)
+                    return true;
+            }
             return false;
         }
 
@@ -70,4 +102,5 @@ namespace Data
         #endregion
 
     }
+
 }
