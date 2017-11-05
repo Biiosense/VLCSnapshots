@@ -63,16 +63,15 @@ namespace Data
 
         #endregion
 
-        #region Override operator == !=
+        #region Override operators Equals / == / !=
 
         public override bool Equals(object Obj)
         {
-            if (!ReferenceEquals(Obj, DBNull.Value))
-            {
-                Stream obj = (Stream)Obj;
-                if (brand == obj.brand && ipAddress == obj.ipAddress && streamNumber == obj.streamNumber && streamAddress == obj.streamAddress)
-                    return true;
-            }
+            if (ReferenceEquals(Obj, null) || ReferenceEquals(Obj, DBNull.Value)) return false;
+
+            if (Obj is Stream obj && brand == obj.brand && ipAddress == obj.ipAddress && streamNumber == obj.streamNumber && streamAddress == obj.streamAddress)
+                return true;
+
             return false;
         }
 

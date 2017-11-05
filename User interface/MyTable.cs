@@ -128,7 +128,6 @@ namespace User_interface
             for (int column = 0; column < ColumnCount; column++)
                 Controls.Remove(GetControlFromPosition(column, row_index_to_remove));
 
-            // move up row controls that comes after row we want to remove
             for (int i = row_index_to_remove + 1; i < RowCount; i++)
             {
                 for (int j = 0; j < ColumnCount; j++)
@@ -138,9 +137,9 @@ namespace User_interface
                         SetRow(control, i - 1);
                 }
             }
-
             RowStyles.RemoveAt(RowCount-- - 1);
         }
+
         #endregion
 
         #region Enable / Disable Row

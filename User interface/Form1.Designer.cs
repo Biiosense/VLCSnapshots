@@ -48,6 +48,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(9, 3, 0, 3);
+            this.menuStrip1.ShowItemToolTips = true;
             this.menuStrip1.Size = new System.Drawing.Size(1072, 29);
             this.menuStrip1.TabIndex = 10;
             this.menuStrip1.Text = "menuStrip1";
@@ -81,14 +82,14 @@
             // tab1ToolStripMenuItem
             // 
             this.tab1ToolStripMenuItem.Name = "tab1ToolStripMenuItem";
-            this.tab1ToolStripMenuItem.Size = new System.Drawing.Size(151, 24);
+            this.tab1ToolStripMenuItem.Size = new System.Drawing.Size(152, 24);
             this.tab1ToolStripMenuItem.Text = "&VLC PLayer";
             this.tab1ToolStripMenuItem.Click += new System.EventHandler(this.tab1ToolStripMenuItem_Click);
             // 
             // tab2ToolStripMenuItem
             // 
             this.tab2ToolStripMenuItem.Name = "tab2ToolStripMenuItem";
-            this.tab2ToolStripMenuItem.Size = new System.Drawing.Size(151, 24);
+            this.tab2ToolStripMenuItem.Size = new System.Drawing.Size(152, 24);
             this.tab2ToolStripMenuItem.Text = "&Playlist view";
             this.tab2ToolStripMenuItem.Click += new System.EventHandler(this.tab2ToolStripMenuItem_Click);
             // 

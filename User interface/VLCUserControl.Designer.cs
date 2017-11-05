@@ -34,6 +34,8 @@
             this.snapshotButton = new System.Windows.Forms.Button();
             this.playButton = new System.Windows.Forms.Button();
             this.vlc = new AxAXVLC.AxVLCPlugin2();
+            this.listBoxPlaylist = new System.Windows.Forms.ListBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.vlc)).BeginInit();
             this.SuspendLayout();
             // 
@@ -91,13 +93,33 @@
             this.vlc.Location = new System.Drawing.Point(0, 0);
             this.vlc.Name = "vlc";
             this.vlc.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("vlc.OcxState")));
-            this.vlc.Size = new System.Drawing.Size(647, 288);
+            this.vlc.Size = new System.Drawing.Size(617, 288);
             this.vlc.TabIndex = 20;
+            // 
+            // listBoxPlaylist
+            // 
+            this.listBoxPlaylist.Enabled = false;
+            this.listBoxPlaylist.FormattingEnabled = true;
+            this.listBoxPlaylist.ItemHeight = 16;
+            this.listBoxPlaylist.Location = new System.Drawing.Point(652, 63);
+            this.listBoxPlaylist.Name = "listBoxPlaylist";
+            this.listBoxPlaylist.Size = new System.Drawing.Size(211, 212);
+            this.listBoxPlaylist.TabIndex = 21;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Location = new System.Drawing.Point(652, 22);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(206, 24);
+            this.comboBox1.TabIndex = 23;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // VLCUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.listBoxPlaylist);
             this.Controls.Add(this.vlc);
             this.Controls.Add(this.stopButton);
             this.Controls.Add(this.pauseButton);
@@ -106,7 +128,8 @@
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "VLCUserControl";
-            this.Size = new System.Drawing.Size(647, 351);
+            this.Size = new System.Drawing.Size(917, 351);
+            this.VisibleChanged += new System.EventHandler(this.VLCUserControl_VisibleChanged);
             ((System.ComponentModel.ISupportInitialize)(this.vlc)).EndInit();
             this.ResumeLayout(false);
 
@@ -118,5 +141,7 @@
         private System.Windows.Forms.Button snapshotButton;
         private System.Windows.Forms.Button playButton;
         private AxAXVLC.AxVLCPlugin2 vlc;
+        private System.Windows.Forms.ListBox listBoxPlaylist;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
