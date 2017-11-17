@@ -32,9 +32,8 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tab1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tab2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.vLCPlayerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -44,12 +43,13 @@
             this.menuStrip1.ImeMode = System.Windows.Forms.ImeMode.On;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.tabToolStripMenuItem});
+            this.tabToolStripMenuItem,
+            this.vLCPlayerToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(9, 3, 0, 3);
             this.menuStrip1.ShowItemToolTips = true;
-            this.menuStrip1.Size = new System.Drawing.Size(1072, 29);
+            this.menuStrip1.Size = new System.Drawing.Size(1112, 29);
             this.menuStrip1.TabIndex = 10;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -72,26 +72,10 @@
             // 
             // tabToolStripMenuItem
             // 
-            this.tabToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tab1ToolStripMenuItem,
-            this.tab2ToolStripMenuItem});
             this.tabToolStripMenuItem.Name = "tabToolStripMenuItem";
-            this.tabToolStripMenuItem.Size = new System.Drawing.Size(41, 23);
-            this.tabToolStripMenuItem.Text = "&Tab";
-            // 
-            // tab1ToolStripMenuItem
-            // 
-            this.tab1ToolStripMenuItem.Name = "tab1ToolStripMenuItem";
-            this.tab1ToolStripMenuItem.Size = new System.Drawing.Size(152, 24);
-            this.tab1ToolStripMenuItem.Text = "&VLC PLayer";
-            this.tab1ToolStripMenuItem.Click += new System.EventHandler(this.tab1ToolStripMenuItem_Click);
-            // 
-            // tab2ToolStripMenuItem
-            // 
-            this.tab2ToolStripMenuItem.Name = "tab2ToolStripMenuItem";
-            this.tab2ToolStripMenuItem.Size = new System.Drawing.Size(152, 24);
-            this.tab2ToolStripMenuItem.Text = "&Playlist view";
-            this.tab2ToolStripMenuItem.Click += new System.EventHandler(this.tab2ToolStripMenuItem_Click);
+            this.tabToolStripMenuItem.Size = new System.Drawing.Size(96, 23);
+            this.tabToolStripMenuItem.Text = "&Playlist View";
+            this.tabToolStripMenuItem.Click += new System.EventHandler(this.tabToolStripMenuItem_Click);
             // 
             // panel1
             // 
@@ -100,14 +84,21 @@
             this.panel1.Location = new System.Drawing.Point(0, 29);
             this.panel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1072, 543);
+            this.panel1.Size = new System.Drawing.Size(1112, 571);
             this.panel1.TabIndex = 12;
+            // 
+            // vLCPlayerToolStripMenuItem
+            // 
+            this.vLCPlayerToolStripMenuItem.Name = "vLCPlayerToolStripMenuItem";
+            this.vLCPlayerToolStripMenuItem.Size = new System.Drawing.Size(87, 23);
+            this.vLCPlayerToolStripMenuItem.Text = "&VLC Player";
+            this.vLCPlayerToolStripMenuItem.Click += new System.EventHandler(this.vLCPlayerToolStripMenuItem_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1072, 572);
+            this.ClientSize = new System.Drawing.Size(1112, 600);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -129,9 +120,8 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tabToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tab1ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tab2ToolStripMenuItem;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ToolStripMenuItem vLCPlayerToolStripMenuItem;
     }
 }
 

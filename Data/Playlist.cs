@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Data
@@ -12,10 +9,18 @@ namespace Data
     [JsonObject(MemberSerialization.Fields)]
     public class Playlist : Collection<Stream>
     {
+        private string name;
+        private int runTime;
 
-        public string name;
+        public Playlist() { }
 
-        public Playlist(string name) 
+        public Playlist(string name, int runTime) 
+        {
+            this.name = name;
+            this.runTime = runTime;
+        }
+
+        public void setName(String name)
         {
             this.name = name;
         }
@@ -25,6 +30,17 @@ namespace Data
             return name;
         }
 
+        public void setRunTime(int runTime)
+        {
+            this.runTime = runTime;
+        }
+
+        public int getRunTime()
+        {
+            return runTime;
+        }
+        
+      
         public override string ToString()
         {
             return getName();
@@ -36,7 +52,7 @@ namespace Data
         {
             if (ReferenceEquals(Obj, null) || ReferenceEquals(Obj, DBNull.Value)) return false;
 
-            if (Obj is Playlist obj && name == obj.name && Items.SequenceEqual(obj.Items))
+            if (Obj is Playlist obj && name == obj.name &&  runTime == obj.runTime && Items.SequenceEqual(obj.Items))
                 return true;
 
             return false;

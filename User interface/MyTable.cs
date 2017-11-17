@@ -6,27 +6,96 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Data;
+using System.ComponentModel;
 
 namespace User_interface
 {
     public class MyTable : TableLayoutPanel
     {
-        #region Add / Remove Row
-
-        public void addRow(int row, Stream stream)
+        public MyTable()
         {
-            addRow( row, stream.getIPAddress(), stream.getStreamNumber(), stream.getBrand(), stream.getStreamAddress() );
+            InitializeComponent();
+            createTitleRow();
+            addNewRow();
         }
 
-        public void addRow(int row, string IPadress = "", int streamNumber = 1, string brand = "", string streamAddress = "")
+        private void InitializeComponent()
         {
-            if (row == RowCount)
+            SuspendLayout();
+
+            Name = "Table";
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
+            Location = new Point(0, 0);
+
+            ResumeLayout(false);
+        }
+
+        public void createTitleRow()
+        {
+            string[] columnTitles = { "IP Adress", "Stream number", "Brand", "Stream address", "Actions" };
+
+            RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            RowCount++;
+            for (int i = 0; i < columnTitles.Count(); i++)
             {
-                RowStyles.Add(new RowStyle(SizeType.AutoSize));
-                RowCount++;
+                ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+                ColumnCount++;
+                Label label = new Label
+                {
+                    AutoSize = true,
+                    Text = columnTitles[i]
+                };
+                Controls.Add(label, i, 0);
             }
+        }
 
+        public void importPlaylist( Playlist playlist)
+        {
+            for (int i = 0; i < playlist.Count; i++)
+                addRowFromStream(i + 1, playlist[i]);
+        }
 
+        public Playlist exportPlaylist()
+        {
+            Playlist playlist = new Playlist();
+            for( int i=1; i<RowCount-1; i++)
+                playlist.Add(getStreamFromRow(i));
+            return playlist;
+        }
+
+        public Stream getStreamFromRow(int row)
+        {
+            string ipAddress = ((TextBox)GetControlFromPosition(0, row)).Text;
+            int streamNumber = (int)((NumericUpDown)GetControlFromPosition(1, row)).Value;
+            string brand = ((TextBox)GetControlFromPosition(2, row)).Text;
+            string streamAddress = ((TextBox)GetControlFromPosition(3, row)).Text;
+
+            return new Stream(ipAddress, streamNumber, brand, streamAddress);
+        }
+
+        public void Clear()
+        { 
+            for (int i = RowCount-2; i > 0; i--)
+                remove_row(i);
+        }
+
+        #region Add / Remove Row
+
+        public void addRowFromStream(int row, Stream stream)
+        {
+            addRow(row, stream.getIPAddress(), stream.getStreamNumber(), stream.getBrand(), stream.getStreamAddress() );
+            changeToAddedRow(row);
+        }
+
+        public void addNewRow()
+        {
+            addRow(RowCount, "", 1, "", "");
+        }
+   
+        public void addRow(int row, string IPadress, int streamNumber, string brand, string streamAddress)
+        {
             TextBox textBoxIPAddress = new TextBox
             {
                 Size = new Size(100, 23),
@@ -71,7 +140,7 @@ namespace User_interface
                 Text = "&Add",
                 UseVisualStyleBackColor = true
             };
-            buttonAdd.Click += new EventHandler(((UserControl1)GetContainerControl()).buttonAdd_Click);
+            buttonAdd.Click += buttonAdd_Click;
             new ToolTip().SetToolTip(buttonAdd, "Add");
 
             Button buttonUpdate = new Button
@@ -82,7 +151,7 @@ namespace User_interface
                 Text = "&Update",
                 UseVisualStyleBackColor = true
             };
-            buttonUpdate.Click += new EventHandler(((UserControl1)GetContainerControl()).buttonUpdate_Click);
+            buttonUpdate.Click += buttonUpdate_Click;
             new ToolTip().SetToolTip(buttonUpdate, "Update");
 
             Button buttonValidate = new Button
@@ -93,7 +162,7 @@ namespace User_interface
                 Text = "&Validate",
                 UseVisualStyleBackColor = true
             };
-            buttonValidate.Click += new EventHandler(((UserControl1)GetContainerControl()).buttonValidate_Click);
+            buttonValidate.Click += buttonValidate_Click;
             new ToolTip().SetToolTip(buttonValidate, "Validate");
 
             Button buttonDelete = new Button
@@ -104,7 +173,7 @@ namespace User_interface
                 Text = "&Delete",
                 UseVisualStyleBackColor = true
             };
-            buttonDelete.Click += new EventHandler(((UserControl1)GetContainerControl()).buttonDelete_Click);
+            buttonDelete.Click += buttonDelete_Click;
             new ToolTip().SetToolTip(buttonDelete, "Delete");
 
             buttonUpdate.Visible = false;
@@ -112,6 +181,16 @@ namespace User_interface
             buttonDelete.Visible = false;
 
             panel.Controls.AddRange( new Control[] { buttonAdd, buttonUpdate, buttonValidate, buttonDelete });
+
+            RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            RowCount++;
+            if ( row < RowCount-1)
+            {
+                for (int i = RowCount-2; i >= row; i--)
+                    for (int j = 0; j < ColumnCount; j++)
+                         SetRow(GetControlFromPosition(j, i), i + 1);
+                        
+            }
 
             Controls.Add(textBoxIPAddress, 0, row);
             Controls.Add(numericUpDownStreamNumber, 1, row);
@@ -132,7 +211,7 @@ namespace User_interface
             {
                 for (int j = 0; j < ColumnCount; j++)
                 {
-                    var control = GetControlFromPosition(j, i);
+                    Control control = GetControlFromPosition(j, i);
                     if (control != null)
                         SetRow(control, i - 1);
                 }
@@ -142,7 +221,62 @@ namespace User_interface
 
         #endregion
 
+        #region Clicks actions
+
+        public void buttonAdd_Click(object sender, EventArgs e)
+        {
+            SuspendLayout();
+            int row = GetRow(((Button)sender).Parent);
+
+            Stream stream = getStreamFromRow(row);
+            if (!stream.isEmpty())
+            {
+                changeToAddedRow(row);
+                addNewRow();
+            }
+
+            PerformLayout();
+            ResumeLayout(true);
+        }
+
+        public void buttonUpdate_Click(object sender, EventArgs e)
+        {
+            SuspendLayout();
+            int row = GetRow(((Button)sender).Parent);
+
+            changeToBeingModifiedRow(row);
+
+            PerformLayout();
+            ResumeLayout(true);
+        }
+
+        public void buttonValidate_Click(object sender, EventArgs e)
+        {
+            SuspendLayout();
+            int row = GetRow(((Button)sender).Parent);
+
+            changeToAddedRow(row);
+
+            PerformLayout();
+            ResumeLayout(true);
+        }
+
+        public void buttonDelete_Click(object sender, EventArgs e)
+        {
+            SuspendLayout();
+            int row = GetRow(((Button)sender).Parent);
+
+            if (MessageBox.Show("Do you really want to delete this stream ?", "Stream deletion", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                remove_row(row);
+
+            PerformLayout();
+            ResumeLayout(true);
+        }
+
+        #endregion
+
         #region Enable / Disable Row
+
         public void disableRow(int row)
         {
             for (int column = 0; column < ColumnCount - 1; column++)
@@ -166,8 +300,10 @@ namespace User_interface
                     enableRow(i);
             }
         }
+
         #endregion
 
+        #region Buttons managment
 
         public void changeToBeingModifiedRow(int row)
         {
@@ -188,6 +324,8 @@ namespace User_interface
             panel.Controls["buttonDelete"].Visible = true;
             disableRow(row);
         }
+
+        #endregion
 
     }
 }

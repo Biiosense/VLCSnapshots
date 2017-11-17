@@ -26,12 +26,12 @@ namespace User_interface
 
 
         public static string TODO = "Auto run of snapshosts" +
-                                    "Custom runtime by Stream" +
-                                    "Change the name of a playlist" +
+                                    "Custom runtime by Playlist" +        "✓" +
+                                    "Change the name of a playlist" +       "✓" +
                                     "Add button to add a playlist " +
-                                    "Remove button to remove a playlist" +
+                                    "Remove button to remove a playlist" +      "✓" +
                                     "Multiple streams by ip address" +
-                                    "Save button in playlist view" +
+                                    "Save button in playlist view" +        "✓" +
                                     "Size management (minimum size of the form, handle size change" +
                                     "Menu items : " +
                                         "Settings : Customize the target directory of snapshosts" +
@@ -39,18 +39,19 @@ namespace User_interface
                                         "Open an Excel file to playlist" +
                                     "Read VLC logs and provide infos";
             
-        public Playlist[] playlists;
+        public List<Playlist> playlists;
 
 
         public Form1()
         {
             InitializeComponent();
             playlists = readPlaylistFromJson();
-            panel1.Controls.AddRange( new Control[] { new UserControl1(this) ,  new VLCUserControl(this) });
-            panel1.Controls.OfType<UserControl1>().First().Visible = true;
+            panel1.Controls.AddRange( new Control[] { new PlaylistEditorUserControl(this), new VLCUserControl(this) });
+            panel1.Controls.OfType<PlaylistEditorUserControl>().First().Visible = true;
             panel1.Controls.OfType<VLCUserControl>().First().Visible = false;
+
         }
-        
+
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -63,23 +64,23 @@ namespace User_interface
                     e.Cancel = true;
             }
         }
-       
 
-        private void tab1ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void tabToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            panel1.Controls.OfType<UserControl1>().First().Visible = false;
-            panel1.Controls.OfType<VLCUserControl>().First().Visible = true;
-        }
-
-        private void tab2ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            panel1.Controls.OfType<UserControl1>().First().Visible = true;
+            panel1.Controls.OfType<PlaylistEditorUserControl>().First().Visible = true;
             panel1.Controls.OfType<VLCUserControl>().First().Visible = false;
         }
 
+        private void vLCPlayerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            panel1.Controls.OfType<PlaylistEditorUserControl>().First().Visible = false;
+            panel1.Controls.OfType<VLCUserControl>().First().Visible = true;
+        }
+
+
         private bool checkChanges()
         {
-            Playlist[] savedPlaylists = getSavedPlaylists();
+            List<Playlist> savedPlaylists = getSavedPlaylists();
             return !( playlists == null && savedPlaylists == null ? true
                     : playlists == null || savedPlaylists == null ? false
                     : playlists.SequenceEqual(savedPlaylists));
@@ -96,23 +97,27 @@ namespace User_interface
             Console.WriteLine("Playlists saved : " + jsonfilepath);
         }
 
-        public Playlist[] readPlaylistFromJson()
+        public List<Playlist> readPlaylistFromJson()
         {
-            Playlist[] playlists = getSavedPlaylists();
-            
-            if ( playlists == null )
+            List<Playlist> playlists = getSavedPlaylists();
+
+            if (playlists == null)
             {
-                playlists = new Playlist[1];
-                playlists[0] = new Playlist("Playlist 1");
-                playlists[0].Add(defaultStream1);
-                playlists[0].Add(defaultStream2);
+                playlists = new List<Playlist>();
+                Playlist playlist1 = new Playlist("Playlist 1", 5);
+                Playlist playlist2 = new Playlist("Playlist 2", 5);
+                playlist1.Add(defaultStream1);
+                playlist2.Add(defaultStream2);
+                playlists.Add(playlist1);
+                playlists.Add(playlist2);
             }
+
             return playlists;
         }
 
-        private Playlist[] getSavedPlaylists()
+        private List<Playlist> getSavedPlaylists()
         {
-            Playlist[] playlists = null;
+            List<Playlist> playlists = null;
             if (File.Exists(jsonfilepath))
             {
                 string json;
@@ -120,10 +125,9 @@ namespace User_interface
                 {
                     json = file.ReadToEnd();
                 }
-                playlists = JsonConvert.DeserializeObject<Playlist[]>(json);
+                playlists = JsonConvert.DeserializeObject<List<Playlist>>(json);
             }
             return playlists;
         }
-        
     }
 }

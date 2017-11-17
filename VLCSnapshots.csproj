@@ -91,6 +91,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="User interface\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -104,11 +109,11 @@
     <Compile Include="User interface\MyTable.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="User interface\UserControl1.cs">
+    <Compile Include="User interface\PlaylistEditorUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="User interface\UserControl1.Designer.cs">
-      <DependentUpon>UserControl1.cs</DependentUpon>
+    <Compile Include="User interface\PlaylistEditorUserControl.Designer.cs">
+      <DependentUpon>PlaylistEditorUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="User interface\VLCUserControl.cs">
       <SubType>UserControl</SubType>
@@ -121,15 +126,14 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="User interface\UserControl1.resx">
-      <DependentUpon>UserControl1.cs</DependentUpon>
+    <EmbeddedResource Include="User interface\MyTable.resx">
+      <DependentUpon>MyTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="User interface\PlaylistEditorUserControl.resx">
+      <DependentUpon>PlaylistEditorUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="User interface\VLCUserControl.resx">
       <DependentUpon>VLCUserControl.cs</DependentUpon>
@@ -159,25 +163,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="AxAXVLC">
-      <Guid>{DF2BBE39-40A8-433B-A279-073F48DA94B6}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>aximp</WrapperTool>
-      <Isolated>False</Isolated>
-    </COMReference>
-    <COMReference Include="AXVLC">
-      <Guid>{DF2BBE39-40A8-433B-A279-073F48DA94B6}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
