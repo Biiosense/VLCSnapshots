@@ -39,8 +39,7 @@ namespace Data
         {
             return runTime;
         }
-        
-      
+
         public override string ToString()
         {
             return getName();

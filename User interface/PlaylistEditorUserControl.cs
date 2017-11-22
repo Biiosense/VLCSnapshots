@@ -20,11 +20,12 @@ namespace User_interface
 
         public PlaylistEditorUserControl(Form1 form)
         {
-            this.form = form;
             InitializeComponent();
+            this.form = form;
+            setBindingList();
         }
 
-        private void PlaylistEditorUserControl_Load(object sender, EventArgs e)
+        private void setBindingList()
         {
             if (form.playlists != null)
                 bindingList = new BindingList<Playlist>(form.playlists);
@@ -34,6 +35,7 @@ namespace User_interface
             panelPlaylistView.Controls.Add(new MyTable());
             currentPlaylistIndex = -1;
         }
+
 
         private void buttonAddPlaylist_Click(object sender, EventArgs e)
         {
@@ -45,8 +47,9 @@ namespace User_interface
 
         private void buttonDeletePlaylist_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Do you really want to delete this playlist ?", "Playlist deletion", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                bindingList.RemoveAt(listBoxPlaylists.SelectedIndex);
+            if (listBoxPlaylists.SelectedIndex != -1)
+                if (MessageBox.Show("Do you really want to delete this playlist ?", "Playlist deletion", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    bindingList.RemoveAt(listBoxPlaylists.SelectedIndex);
         }
 
         private void listBoxPlaylists_SelectedIndexChanged(object sender, EventArgs e)

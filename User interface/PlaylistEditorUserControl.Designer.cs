@@ -54,7 +54,7 @@
             this.panelPlaylistView.Location = new System.Drawing.Point(4, 69);
             this.panelPlaylistView.Margin = new System.Windows.Forms.Padding(4);
             this.panelPlaylistView.Name = "panelPlaylistView";
-            this.panelPlaylistView.Size = new System.Drawing.Size(1024, 252);
+            this.panelPlaylistView.Size = new System.Drawing.Size(988, 252);
             this.panelPlaylistView.TabIndex = 0;
             // 
             // buttonAddPlaylist
@@ -116,7 +116,7 @@
             this.panelPlaylistSettings.Location = new System.Drawing.Point(7, 160);
             this.panelPlaylistSettings.Margin = new System.Windows.Forms.Padding(4);
             this.panelPlaylistSettings.Name = "panelPlaylistSettings";
-            this.panelPlaylistSettings.Size = new System.Drawing.Size(1034, 327);
+            this.panelPlaylistSettings.Size = new System.Drawing.Size(998, 327);
             this.panelPlaylistSettings.TabIndex = 7;
             // 
             // buttonSaveChanges
@@ -186,7 +186,7 @@
             // 
             this.labelPlaylistSettings.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.labelPlaylistSettings.AutoSize = true;
-            this.labelPlaylistSettings.Location = new System.Drawing.Point(4, 142);
+            this.labelPlaylistSettings.Location = new System.Drawing.Point(-14, 142);
             this.labelPlaylistSettings.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelPlaylistSettings.Name = "labelPlaylistSettings";
             this.labelPlaylistSettings.Size = new System.Drawing.Size(90, 15);
@@ -217,8 +217,7 @@
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "PlaylistEditorUserControl";
-            this.Size = new System.Drawing.Size(1045, 491);
-            this.Load += new System.EventHandler(this.PlaylistEditorUserControl_Load);
+            this.Size = new System.Drawing.Size(1009, 491);
             this.VisibleChanged += new System.EventHandler(this.PlaylistEditorUserControl_VisibleChanged);
             this.panelPlaylistSettings.ResumeLayout(false);
             this.panelPlaylistSettings.PerformLayout();

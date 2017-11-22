@@ -117,10 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>35, 13</value>
-  </metadata>
-  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>43</value>
-  </metadata>
+  <data name="richTextBoxAbout.Text" xml:space="preserve">
+    <value>The purpose of this application is to play streams with VLC and take a snapshot of each.
+
+It has been designed for cameras, with the possibility to store the IP address, the stream number of the IP address and the brand of the camera.
+
+
+Version : 1.0
+Developper : Maxime Pichaud
+
+This application has been made for my dad and his hundreds of cameras. 
+With a special thank to my brother, Xavier.</value>
+  </data>
 </root>
