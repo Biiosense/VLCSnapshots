@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VLCSnapshots", "VLCSnapshots.csproj", "{7E0D24E6-CECD-4AA2-AFE9-0D6EC29CF80D}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupProject", "..\SetupProject\SetupProject.vdproj", "{6731F10E-6EBF-4F19-AC67-78401F1E7DCE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,14 @@ Global
 		{7E0D24E6-CECD-4AA2-AFE9-0D6EC29CF80D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7E0D24E6-CECD-4AA2-AFE9-0D6EC29CF80D}.Release|x64.ActiveCfg = Release|x64
 		{7E0D24E6-CECD-4AA2-AFE9-0D6EC29CF80D}.Release|x64.Build.0 = Release|x64
+		{6731F10E-6EBF-4F19-AC67-78401F1E7DCE}.Debug|Any CPU.ActiveCfg = Debug
+		{6731F10E-6EBF-4F19-AC67-78401F1E7DCE}.Debug|Any CPU.Build.0 = Debug
+		{6731F10E-6EBF-4F19-AC67-78401F1E7DCE}.Debug|x64.ActiveCfg = Debug
+		{6731F10E-6EBF-4F19-AC67-78401F1E7DCE}.Debug|x64.Build.0 = Debug
+		{6731F10E-6EBF-4F19-AC67-78401F1E7DCE}.Release|Any CPU.ActiveCfg = Release
+		{6731F10E-6EBF-4F19-AC67-78401F1E7DCE}.Release|Any CPU.Build.0 = Release
+		{6731F10E-6EBF-4F19-AC67-78401F1E7DCE}.Release|x64.ActiveCfg = Release
+		{6731F10E-6EBF-4F19-AC67-78401F1E7DCE}.Release|x64.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -16,114 +16,114 @@ namespace User_interface
     public partial class VLCUserControl : UserControl
     {
         Form1 form;
-        public static string snapshotsPath = @"D:\Users\Maxime\Desktop\snapshots\";
 
         public VLCUserControl(Form1 form)
         {
-            this.form = form;
             InitializeComponent();
+            this.form = form;
             setComboBox();
         }
 
         private void setComboBox()
         {
             comboBox1.DataSource = form.playlists;
-            comboBox1.SelectedIndex = 0;
+            if(comboBox1.Items.Count > 0)
+                comboBox1.SelectedIndex = 0;
         }
 
         private void playButton_Click(object sender, EventArgs e)
         {
-            loadPlaylist( (Playlist)comboBox1.SelectedItem);
-            listBoxPlaylist.SelectedIndex = 0;
+            if (comboBox1.Items.Count <= 0)
+                return;
 
-            if (vlc.playlist.itemCount > 0 )
+            Playlist playlist = (Playlist)comboBox1.SelectedItem;
+            Timer timer = new Timer();
+            timer.Interval = playlist.getRunTime() * 1000;
+
+            loadPlaylist(playlist);
+            if (vlc.playlist.itemCount > 0)
             {
-                Console.WriteLine("Play!");
+                listBoxPlaylist.SelectedIndex = 0;
                 vlc.playlist.play();
-            } 
-        }
 
-        private void snapshotButton_Click(object sender, EventArgs e)
-        {
-            if (vlc.playlist.isPlaying)
-            {
-                takeSnapshot();
-
-                int currentIndex = listBoxPlaylist.SelectedIndex;
-                if (currentIndex + 1 < listBoxPlaylist.Items.Count)
+                timer.Tick += delegate
                 {
-                    listBoxPlaylist.SelectedIndex++;
-                    vlc.playlist.next();
-                }
-                else
-                {
-                    vlc.playlist.stop();
-                    listBoxPlaylist.ClearSelected();
-                }
+                    timer.Enabled = false;
+                    vlc.playlist.pause();
+                    takeSnapshot();
+                    int currentIndex = listBoxPlaylist.SelectedIndex;
+                    if (currentIndex + 1 < listBoxPlaylist.Items.Count)
+                    {
+                        listBoxPlaylist.SelectedIndex++;
+                        vlc.playlist.next();
+                        timer.Enabled = true;
+                    }
+                    else
+                    {
+                        listBoxPlaylist.ClearSelected();
+                        vlc.playlist.stop();
+                        timer.Stop();
+                    }
+                };
+                timer.Start();
             }
-        }
-
-        private void pauseButton_Click(object sender, EventArgs e)
-        {
-            if (vlc.playlist.isPlaying)
-                vlc.playlist.pause();
-            else
-                vlc.playlist.play();
-        }
-
-        private void stopButton_Click(object sender, EventArgs e)
-        {
-            if (vlc.playlist.isPlaying)
-                vlc.playlist.stop();
         }
         
         private void loadPlaylist(Playlist playlist)
         {
             foreach (Data.Stream stream in playlist)
-            {
                 vlc.playlist.add(stream.getStreamAddress(), stream.getStreamName());
-            }
         }
 
         private void takeSnapshot()
         {
-            Console.WriteLine("Let's take a picture !");
-            vlc.playlist.pause();
             vlc.video.takeSnapshot();
-            vlc.playlist.play();
 
             DirectoryInfo currentDir = new DirectoryInfo(Directory.GetCurrentDirectory());
             FileInfo bmpfile = currentDir.GetFiles()[0];
             foreach (FileInfo file in currentDir.GetFiles())
-                if (file.CreationTime > bmpfile.CreationTime)
+                if (file.CreationTime >
+                    bmpfile.CreationTime)
                     bmpfile = file;
 
-            Image image;
-            using (var bmpTmp = new Bitmap(bmpfile.FullName))
-                image = new Bitmap(bmpTmp);
+            if (bmpfile.Extension == ".bmp")
+            {
+                Image image;
+                using (var bmpTmp = new Bitmap(bmpfile.FullName))
+                    image = new Bitmap(bmpTmp);
+                bmpfile.Delete();
 
-            bmpfile.Delete();
+                String subDir = "ScanVideo" + DateTime.Now.ToString("yyyyMMdd_HHmm");
+                String targetDir = Path.Combine(form.settings.SnapshotsFolderPath, subDir);
+                Directory.CreateDirectory(targetDir);
 
-            String subDir = "ScanVideo" + DateTime.Now.ToString("yyyyMMdd_HHmm");
-            String targetDir = Path.Combine( snapshotsPath, subDir);
-            Directory.CreateDirectory(targetDir);
-
-            Data.Stream currentStream = (Data.Stream)listBoxPlaylist.SelectedItem;
-            String filename = Path.Combine(targetDir, currentStream.getStreamName() + ".jpg");
-            image.Save(filename, ImageFormat.Jpeg);
-            MessageBox.Show(filename + " created !");
-   
+                Data.Stream currentStream = (Data.Stream)listBoxPlaylist.SelectedItem;
+                String filename = Path.Combine(targetDir, currentStream.getStreamName() + ".jpg");
+                image.Save(filename, ImageFormat.Jpeg);
+                MessageBox.Show(filename + " created !", "Snapshot created", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                Data.Stream currentStream = (Data.Stream)listBoxPlaylist.SelectedItem;
+                MessageBox.Show("Couldn't create snapshot for stream" + currentStream.getStreamName(), "Snapshot error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            listBoxPlaylist.Items.Clear();
-            listBoxPlaylist.Items.AddRange( ((Playlist)comboBox1.SelectedItem).ToArray());
+            if (comboBox1.Items.Count > 0)
+            {
+                listBoxPlaylist.Items.Clear();
+                listBoxPlaylist.Items.AddRange(((Playlist)comboBox1.SelectedItem).ToArray());
+            }
         }
         private void VLCUserControl_VisibleChanged(object sender, EventArgs e)
         {
             if ( Visible == true)
+            {
+                comboBox1.DataSource = form.playlists;
                 comboBox1_SelectedIndexChanged(sender, e);
+            }
         }
     }
 }

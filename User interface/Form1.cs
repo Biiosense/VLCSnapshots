@@ -13,6 +13,8 @@ using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using Settings_Interface;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace User_interface
 {
@@ -37,11 +39,15 @@ namespace User_interface
                                         "Open an Excel file to playlist" +
                                     "Read VLC logs and provide infos" +
             "" +
-            "Add VLC icon to the main form" +
-            "Add 'not implemented yet' on Save menu button" +
+            "Add VLC icon to the main form" +                           "✓" + 
+            "Add 'not implemented yet' on Save menu button" +               "✓" +
             "Rename Form1 to MainForm" +
             "Clean Project" +
             "Try the application with online streams" +
+            "" +
+            "Check Windows version compatibility" +
+            "64 vs 86 system" +
+            "File not found exception CLR20r3" +
             "";
 
         public Settings settings;
@@ -50,13 +56,15 @@ namespace User_interface
         public Form1()
         {
             InitializeComponent();
+            grantAccess(Directory.GetCurrentDirectory());
             setSettings();
             setPlaylists();
-            panel1.Controls.AddRange(new Control[] { new PlaylistEditorUserControl(this) });
-            //    panel1.Controls.AddRange(new Control[] { new PlaylistEditorUserControl(this), new VLCUserControl(this) });
+            panel1.Controls.AddRange(new Control[] { new PlaylistEditorUserControl(this), new VLCUserControl(this) });
             panel1.Controls.OfType<PlaylistEditorUserControl>().First().Visible = true;
-            //    panel1.Controls.OfType<VLCUserControl>().First().Visible = false;
+            panel1.Controls.OfType<VLCUserControl>().First().Visible = false;
         }
+
+        #region Form load / close
 
         private void setSettings()
         {
@@ -78,14 +86,14 @@ namespace User_interface
             if (playlists == null)
             {
                 playlists = new List<Playlist>();
-                /*
+                
                 Playlist playlist1 = new Playlist("Playlist 1", 5);
                 Playlist playlist2 = new Playlist("Playlist 2", 5);
                 playlist1.Add(defaultStream1);
                 playlist2.Add(defaultStream2);
                 playlists.Add(playlist1);
                 playlists.Add(playlist2);
-                */
+                
             }
         }
 
@@ -102,6 +110,11 @@ namespace User_interface
             }
         }
 
+        #endregion
+
+        #region Menu actions
+
+
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Feature not implemented yet", "Save playlist in file", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -115,15 +128,28 @@ namespace User_interface
         private void tabToolStripMenuItem_Click(object sender, EventArgs e)
         {
             panel1.Controls.OfType<PlaylistEditorUserControl>().First().Visible = true;
-        //    panel1.Controls.OfType<VLCUserControl>().First().Visible = false;
+            panel1.Controls.OfType<VLCUserControl>().First().Visible = false;
         }
 
         private void vLCPlayerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             panel1.Controls.OfType<PlaylistEditorUserControl>().First().Visible = false;
-        //    panel1.Controls.OfType<VLCUserControl>().First().Visible = true;
+            panel1.Controls.OfType<VLCUserControl>().First().Visible = true;
         }
 
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new SettingsForm(this).ShowDialog();
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new AboutForm().ShowDialog();
+        }
+
+        #endregion
+
+        #region Json Save
 
         private bool checkChanges()
         {
@@ -159,15 +185,16 @@ namespace User_interface
         }
 
 
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        public bool grantAccess(string fullPath)
         {
-            new SettingsForm(this).ShowDialog();
+            DirectoryInfo dInfo = new DirectoryInfo(fullPath);
+            DirectorySecurity dSecurity = dInfo.GetAccessControl();
+            dSecurity.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), FileSystemRights.FullControl, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.NoPropagateInherit, AccessControlType.Allow));
+            dInfo.SetAccessControl(dSecurity);
+            return true;
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            new AboutForm().ShowDialog();
-        }
+        #endregion
 
     }
 }

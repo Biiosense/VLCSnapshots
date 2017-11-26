@@ -16,7 +16,8 @@ namespace User_interface
     {
         Form1 form;
         BindingList<Playlist> bindingList;
-        int currentPlaylistIndex;
+        int currentPlaylistIndex = -1;
+        int currentPlaylistsCount = -1;
 
         public PlaylistEditorUserControl(Form1 form)
         {
@@ -31,9 +32,9 @@ namespace User_interface
                 bindingList = new BindingList<Playlist>(form.playlists);
             else
                 bindingList = new BindingList<Playlist>();
-            listBoxPlaylists.DataSource = bindingList;
             panelPlaylistView.Controls.Add(new MyTable());
-            currentPlaylistIndex = -1;
+            listBoxPlaylists.DataSource = bindingList;
+            checkListHasItems();
         }
 
 
@@ -43,51 +44,110 @@ namespace User_interface
             playlist.setName("New playlist");
             playlist.setRunTime(5);
             bindingList.Add(playlist);
+
+            currentPlaylistsCount++;
+            checkListHasItems();
+            updateSelectedItem(bindingList.Count - 1);
         }
 
         private void buttonDeletePlaylist_Click(object sender, EventArgs e)
         {
-            if (listBoxPlaylists.SelectedIndex != -1)
-                if (MessageBox.Show("Do you really want to delete this playlist ?", "Playlist deletion", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    bindingList.RemoveAt(listBoxPlaylists.SelectedIndex);
+            if (listBoxPlaylists.SelectedIndex != -1 && MessageBox.Show("Do you really want to delete this playlist ?", "Playlist deletion", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                bindingList.RemoveAt(listBoxPlaylists.SelectedIndex);
+                currentPlaylistsCount--;
+                checkListHasItems();
+                checkSelectedItemChanged();
+            }
         }
 
         private void listBoxPlaylists_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if ( listBoxPlaylists.SelectedIndex != currentPlaylistIndex)
+            if (listBoxPlaylists.SelectedIndex != currentPlaylistIndex)
             {
-                currentPlaylistIndex = listBoxPlaylists.SelectedIndex;
-                Playlist playlist = (Playlist)listBoxPlaylists.SelectedItem;
-                textBoxPlaylistName.Text = playlist.getName();
-                numericUpDownRunTime.Value = playlist.getRunTime();
-
-                MyTable table = (MyTable)panelPlaylistView.Controls["Table"];
-                table.SuspendLayout();
-                table.Clear();
-                table.importPlaylist(playlist);
-                table.ResumeLayout();
+                updateSelectedItem(listBoxPlaylists.SelectedIndex);
             }
         }
 
         private void buttonSaveChanges_Click(object sender, EventArgs e)
         {
             MyTable table = (MyTable)panelPlaylistView.Controls["Table"];
+            Playlist playlist = (Playlist)listBoxPlaylists.SelectedItem;
+
+            if (table.hasBeingModifiedRows())
+            {
+
+                DialogResult dialogResult = MessageBox.Show("Save in-edition streams ?", "Playlist save", MessageBoxButtons.YesNoCancel);
+                if (dialogResult == DialogResult.Yes)
+                    for (int j = 1; j < table.RowCount - 1; j++)
+                        if (table.GetControlFromPosition(0, j).Enabled == true)
+                        {
+                            table.SuspendLayout();
+                            table.changeToAddedRow(j);
+                            table.ResumeLayout();
+                        }
+                        else if (dialogResult == DialogResult.No)
+                            for (int i = 1; i < table.RowCount - 1; i++)
+                                if (table.GetControlFromPosition(0, i).Enabled == true)
+                                {
+                                    table.SuspendLayout();
+                                    table.remove_row(i);
+                                    table.addRowFromStream(i, playlist[i - 1]);
+                                    table.ResumeLayout();
+                                }
+                                else
+                                    return;
+            }
+
             Playlist newPlaylist = table.exportPlaylist();
             newPlaylist.setName(textBoxPlaylistName.Text);
             newPlaylist.setRunTime((int)numericUpDownRunTime.Value);
 
-            Playlist playlist = (Playlist)listBoxPlaylists.SelectedItem;
-
             if (playlist != newPlaylist)
             {
                 bindingList[listBoxPlaylists.SelectedIndex] = newPlaylist;
+                form.playlists = bindingList.ToList();
             }
         }
 
-        private void PlaylistEditorUserControl_VisibleChanged(object sender, EventArgs e)
+        private void checkListHasItems()
         {
-            if (bindingList != null && Visible == false)
-                form.playlists = bindingList.ToList();
+            if (bindingList.Count == 0)
+            {
+                labelPlaylistSettings.Visible = false;
+                panelPlaylistSettings.Visible = false;
+            }
+            else
+            {
+                labelPlaylistSettings.Visible = true;
+                panelPlaylistSettings.Visible = true;
+            }
+        }
+
+        private void updateSelectedItem(int index)
+        {
+            currentPlaylistIndex = index;
+            listBoxPlaylists.SelectedIndex = index;
+
+            MyTable table = (MyTable)panelPlaylistView.Controls["Table"];
+            table.SuspendLayout();
+            table.Clear();
+            if (index >= 0)
+            {
+                Playlist playlist = (Playlist)listBoxPlaylists.Items[index];
+                textBoxPlaylistName.Text = playlist.getName();
+                numericUpDownRunTime.Value = playlist.getRunTime();
+                table.importPlaylist(playlist);
+            }
+            table.ResumeLayout();
+        }
+
+        private void checkSelectedItemChanged()
+        {
+            if (listBoxPlaylists.SelectedIndex == currentPlaylistIndex && bindingList.Count != currentPlaylistsCount)
+            {
+                updateSelectedItem(listBoxPlaylists.SelectedIndex);
+            }
         }
     }
 }

@@ -289,18 +289,6 @@ namespace User_interface
                 GetControlFromPosition(column, row).Enabled = true;
         }
 
-        public void disableOtherRows(int row)
-        {
-            for (int i = 0; i < RowCount; i++)
-            {
-                if (i != row-1)
-                    if (GetControlFromPosition(0, i).Enabled)
-                        disableRow(i);
-                else
-                    enableRow(i);
-            }
-        }
-
         #endregion
 
         #region Buttons managment
@@ -323,6 +311,15 @@ namespace User_interface
             panel.Controls["buttonValidate"].Visible = false;
             panel.Controls["buttonDelete"].Visible = true;
             disableRow(row);
+        }
+
+        public bool hasBeingModifiedRows()
+        {
+            for (int i = 1; i < RowCount - 1; i++)
+                if (GetControlFromPosition(0, i).Enabled == true)
+                    return true;
+
+            return false;
         }
 
         #endregion
